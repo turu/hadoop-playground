@@ -1,30 +1,44 @@
 package pl.turu.hadoop.mapreduce.wordcount;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.*;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 
 /**
  * Author: Piotr Turek
  */
-public class WordCount {
+public class WordCount extends Configured implements Tool {
 
-    public static void main(String[] args) throws Exception {
-        JobConf conf = new JobConf(WordCount.class);
-        conf.setJobName("wordcount");
-        conf.setOutputKeyClass(Text.class);
-        conf.setMapOutputValueClass(IntWritable.class);
-        conf.setMapperClass(Map.class);
-        conf.setCombinerClass(Reduce.class);
-        conf.setReducerClass(Reduce.class);
-        conf.setInputFormat(TextInputFormat.class);
-        conf.setOutputFormat(TextOutputFormat.class);
+    @Override
+    public int run(String[] args) throws Exception {
+        Configuration configuration = this.getConf();
+        JobConf job = new JobConf(configuration, WordCount.class);
 
-        FileInputFormat.setInputPaths(conf, new Path(args[0]));
-        FileOutputFormat.setOutputPath(conf, new Path(args[1]));
+        job.setJobName("wordcount");
+        job.setOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+        job.setMapperClass(Map.class);
+        job.setCombinerClass(Reduce.class);
+        job.setReducerClass(Reduce.class);
+        job.setInputFormat(TextInputFormat.class);
+        job.setOutputFormat(TextOutputFormat.class);
 
-        JobClient.runJob(conf);
+        FileInputFormat.setInputPaths(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        JobClient.runJob(job);
+
+        return 0;
     }
 
+    public static void main(String[] args) throws Exception {
+        int res = ToolRunner.run(new Configuration(), new WordCount(), args);
+
+        System.exit(res);
+    }
 }
