@@ -4,11 +4,6 @@ if [[ -z $HADOOP_HOME ]]; then
     HADOOP_HOME=/opt/hadoop-1.1.2
 fi
 
-#Loading hadoop env settings
-. conf/hadoop-env.sh
-
-#Overriding selected options
-
 job_name=wordcount
 job_executable=lib/hadoop_playground-1.0-SNAPSHOT.jar
 
@@ -25,7 +20,7 @@ if [[ $# > 2 ]]; then
     output_hdfs=$3
 fi
 
-hadoop_exec="$HADOOP_HOME/bin/hadoop --config conf"
+hadoop_exec="$HADOOP_HOME/bin/hadoop"
 ${hadoop_exec} dfs -mkdir $input_hdfs
 ${hadoop_exec} dfs -copyFromLocal $input_local/* $input_hdfs/
 

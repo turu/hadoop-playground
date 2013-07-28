@@ -72,9 +72,6 @@
                                 </copy>
                                 <chmod dir="${basedir}/build/bin" includes="**/*.sh"
                                     perm="ugo+rx"/>
-                                <copy todir="${basedir}/build/conf">
-                                    <fileset dir="${basedir}/config/hadoop"/>
-                                </copy>
                             </target>
                         </configuration>
                         <goals>
