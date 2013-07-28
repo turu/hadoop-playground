@@ -10,9 +10,8 @@ fi
 #Overriding selected options
 
 job_name=wordcount
-job_executable=lib/hadoop_playground-1.0-SNAPSHOT.jar
 
-input_local=$1
+output_local=$1
 
 input_hdfs=/usr/${USER}/${job_name}/input
 if [[ $# > 1 ]]; then
@@ -20,14 +19,13 @@ if [[ $# > 1 ]]; then
 fi
 
 output_hdfs=/usr/${USER}/${job_name}/output
-
 if [[ $# > 2 ]]; then
     output_hdfs=$3
 fi
 
 hadoop_exec="$HADOOP_HOME/bin/hadoop --config conf"
-${hadoop_exec} dfs -mkdir $input_hdfs
-${hadoop_exec} dfs -copyFromLocal $input_local/* $input_hdfs/
 
-${hadoop_exec} jar $job_executable $input_hdfs $output_hdfs
-
+mkdir $output_local
+${hadoop_exec} dfs -copyToLocal -crc $output_hdfs/* $output_local
+${hadoop_exec} dfs -rmr -skipTrash $output_hdfs
+${hadoop_exec} dfs -rmr -skipTrash $input_hdfs
