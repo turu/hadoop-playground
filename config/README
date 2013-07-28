@@ -1,0 +1,2 @@
+To submit MapReduce job enter build directory (ideally as a root) and issue:
+    bin/run_NameOfTheJob.sh
